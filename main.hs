@@ -1,3 +1,5 @@
+import Data.Char
+
 add :: Int -> Int -> Int
 add x y = x+y
 
@@ -54,3 +56,34 @@ halve ls = toBool ( (length ls) `mod` 2 ) ? ((ls,[]) # (n `take` ls, n `drop` ls
 
 lsc0 = [(x,y) | x <- [1,2],y <- [3,4]]
 lsc1 = [(x,y) | x <- [1,2],y <- [x..4]]
+
+
+toint :: Char -> Int
+toint c = ord (c) - ord ('a')
+tochr :: Int -> Char
+tochr n = chr (n + ord ('a'))
+
+-- shift :: Int -> [Char] -> [Char]
+-- shift n ls = map tochr (map (\x -> x+n) (map toint ls) )
+shift :: Int -> Char -> Char
+-- shift n c = tochr (n + toint c)
+shift n = tochr. (\x -> x+n). toint
+encode :: Int -> String -> String
+encode n = map (shift n)
+-- the z combinator
+-- z f g x = \x -> f(g(x))(x)
+zzz :: (b->a->c) -> (a-> b) -> (a -> c)
+zzz f g = \x -> f (g x) x
+
+rot :: Int -> [a] -> [a]
+rot n ls = (drop n ls) ++ (take n ls)
+
+percent:: Int -> Int -> Float
+percent m n = (fromIntegral n / fromIntegral m) * 100
+
+
+freq :: String -> [Int]
+freq s = map (\x -> sum [1| c <- s, c == x] ) ['a'..'z']
+
+allfreq :: String -> [Float]
+allfreq s = ( map . percent . length)( s) (freq s)
